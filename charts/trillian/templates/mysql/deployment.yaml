@@ -9,14 +9,14 @@ metadata:
   labels:
     {{- include "trillian.mysql.labels" . | nindent 4 }}
   name: {{ template "trillian.mysql.fullname" . }}
-{{ include "trillian.namespace" . | indent 2 }}
+{{ include "common.names.namespace" . | indent 2 }}
 spec:
   selector:
     {{- if .Values.schedulerName }}
     schedulerName: "{{ .Values.schedulerName }}"
     {{- end }}
     matchLabels:
-      {{- include "trillian.mysql.matchLabels" . | nindent 6 }}
+      {{- include "trillian.mysql.selectorLabels" . | nindent 6 }}
   replicas: {{ .Values.mysql.replicaCount }}
   {{- if .Values.mysql.strategy }}
   strategy:
@@ -44,8 +44,8 @@ spec:
       priorityClassName: "{{ .Values.mysql.priorityClassName }}"
 {{- end }}
       containers:
-        - name: {{ template "trillian.name" . }}-{{ .Values.mysql.name }}
-          image: "{{ template "trillian.image" .Values.mysql.image }}"
+        - name: {{ template "common.names.name" . }}-{{ .Values.mysql.name }}
+          image: "{{ template "common.images.image" .Values.mysql.image }}"
           imagePullPolicy: "{{ .Values.mysql.image.pullPolicy }}"
         {{- if .Values.mysql.args }}
           args:
@@ -67,7 +67,7 @@ spec:
             - name: MYSQL_DATABASE
               value: {{ template "mysql.database" . }}
           ports:
-{{- include "trillian.containerPorts" .Values.mysql.service.ports | indent 12 }}
+{{- include "common.network.containerPorts" .Values.mysql.service.ports | indent 12 }}
 {{- if .Values.mysql.livenessProbe }}
           livenessProbe:
 {{ toYaml .Values.mysql.livenessProbe | indent 12 }}

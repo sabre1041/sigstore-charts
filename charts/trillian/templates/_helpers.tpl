@@ -1,29 +1,4 @@
 {{/*
-Expand the name of the chart.
-*/}}
-{{- define "trillian.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "trillian.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
 Return the configured storage system
 */}}
 {{- define "trillian.storageSystem" -}}
@@ -48,7 +23,7 @@ Return the hostname for mysql
 Return the database for mysql
 */}}
 {{- define "mysql.database" -}}
-{{- default (include "trillian.fullname" .) .Values.mysql.database }}
+{{- default (include "common.names.fullname" .) .Values.mysql.database }}
 {{- end -}}
 
 {{/*
@@ -85,6 +60,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
+
 {{/*
 Create a fully qualified Log Server name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -117,25 +93,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s-%s" .Release.Name $name .Values.logSigner.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
-{{- end -}}
-
-{{/*
-Define the raw trillian.namespace template if set with forceNamespace or .Release.Namespace is set
-*/}}
-{{- define "trillian.rawnamespace" -}}
-{{- if .Values.forceNamespace -}}
-{{ print .Values.forceNamespace }}
-{{- else -}}
-{{ print .Release.Namespace }}
-{{- end -}}
-{{- end -}}
-
-
-{{/*
-Define the trillian.namespace template if set with forceNamespace or .Release.Namespace is set
-*/}}
-{{- define "trillian.namespace" -}}
-{{ printf "namespace: %s" (include "trillian.rawnamespace" .) }}
 {{- end -}}
 
 
@@ -220,56 +177,45 @@ Log Signer Arguments
 
 
 {{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "trillian.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
 Create labels for trillian components
 */}}
-{{- define "trillian.common.matchLabels" -}}
-app.kubernetes.io/name: {{ include "trillian.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{- define "trillian.common.metaLabels" -}}
-helm.sh/chart: {{ include "trillian.chart" . }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end -}}
-
-
 {{- define "trillian.mysql.labels" -}}
-{{ include "trillian.mysql.matchLabels" . }}
-{{ include "trillian.common.metaLabels" . }}
+{{ include "trillian.labels.componentLabels" (dict "context" . "component" .Values.mysql.name) }}
 {{- end -}}
 
-{{- define "trillian.mysql.matchLabels" -}}
-app.kubernetes.io/component: {{ .Values.mysql.name | quote }}
-{{ include "trillian.common.matchLabels" . }}
+{{- define "trillian.mysql.selectorLabels" -}}
+{{ include "trillian.labels.componentSelectorLabels" (dict "context" . "component" .Values.mysql.name) }}
 {{- end -}}
-
 
 {{- define "trillian.logServer.labels" -}}
-{{ include "trillian.logServer.matchLabels" . }}
-{{ include "trillian.common.metaLabels" . }}
+{{ include "trillian.labels.componentLabels" (dict "context" . "component" .Values.logServer.name) }}
 {{- end -}}
 
-{{- define "trillian.logServer.matchLabels" -}}
-app.kubernetes.io/component: {{ .Values.logServer.name | quote }}
-{{ include "trillian.common.matchLabels" . }}
+{{- define "trillian.logServer.selectorLabels" -}}
+{{ include "trillian.labels.componentSelectorLabels" (dict "context" . "component" .Values.logServer.name) }}
 {{- end -}}
 
 {{- define "trillian.logSigner.labels" -}}
-{{ include "trillian.logSigner.matchLabels" . }}
-{{ include "trillian.common.metaLabels" . }}
+{{ include "trillian.labels.componentLabels" (dict "context" . "component" .Values.logSigner.name) }}
 {{- end -}}
 
-{{- define "trillian.logSigner.matchLabels" -}}
-app.kubernetes.io/component: {{ .Values.logSigner.name | quote }}
-{{ include "trillian.common.matchLabels" . }}
+{{- define "trillian.logSigner.selectorLabels" -}}
+{{ include "trillian.labels.componentSelectorLabels" (dict "context" . "component" .Values.logSigner.name) }}
 {{- end -}}
+
+{{/*
+Move to Common Chart!
+*/}}
+{{- define "trillian.labels.componentLabels" -}}
+{{ include "common.labels.labels" .context }}
+app.kubernetes.io/component: {{ .component | quote }}
+{{- end -}}
+
+{{- define "trillian.labels.componentSelectorLabels" -}}
+{{ include "common.labels.selectorLabels" .context }}
+app.kubernetes.io/component: {{ .component | quote }}
+{{- end -}}
+
 
 {{/*
 Create the name of the service account to use
@@ -281,17 +227,6 @@ Create the name of the service account to use
 {{- default "default" .Values.server.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/*
-Create the image path for the passed in image field
-*/}}
-{{- define "trillian.image" -}}
-{{- if eq (substr 0 7 .version) "sha256:" -}}
-{{- printf "%s/%s@%s" .registry .repository .version -}}
-{{- else -}}
-{{- printf "%s/%s:%s" .registry .repository .version -}}
-{{- end -}}
-{{- end -}}
 
 {{/*
 Return the secret with MySQL credentials
@@ -319,17 +254,6 @@ Return a random Secret value or the value of an exising Secret key value
 {{- else }}
 {{- print $randomSecret }}
 {{- end }}
-{{- end -}}
-
-
-{{/*
-Create Container Ports based on Service Ports
-*/}}
-{{- define "trillian.containerPorts" -}}
-{{- range . }}
-- containerPort: {{ (ternary .port .targetPort (empty .targetPort)) | int }}
-  protocol: {{ default "TCP" .protocol }}
-{{- end -}}
 {{- end -}}
 
 {{/*

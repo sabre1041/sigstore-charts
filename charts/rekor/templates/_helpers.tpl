@@ -301,16 +301,6 @@ Create the image path for the passed in image field
 {{- end -}}
 
 {{/*
-Create Container Ports based on Service Ports
-*/}}
-{{- define "rekor.containerPorts" -}}
-{{- range . }}
-- containerPort: {{ (ternary .port .targetPort (empty .targetPort)) | int }}
-  protocol: {{ default "TCP" .protocol }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Server Arguments
 */}}
 {{- define "rekor.server.args" -}}

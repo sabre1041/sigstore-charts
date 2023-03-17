@@ -11,10 +11,10 @@ metadata:
 {{ toYaml .Values.logSigner.service.labels | indent 4 }}
 {{- end }}
   name: {{ template "trillian.logSigner.fullname" . }}
-{{ include "trillian.namespace" . | indent 2 }}
+{{ include "common.names.namespace" . | indent 2 }}
 spec:
   ports:
     {{- tpl (toYaml .Values.logSigner.service.ports) . | nindent 4 }}
   selector:
-    {{- include "trillian.logSigner.matchLabels" . | nindent 4 }}
+    {{- include "trillian.logSigner.selectorLabels" . | nindent 4 }}
   type: "{{ .Values.logSigner.service.type }}"

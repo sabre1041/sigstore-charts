@@ -1,14 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
-{{ include "tuf.namespace" . | indent 2 }}
+  name: {{ template "common.names.fullname" . }}
+{{ include "common.names.namespace" . | indent 2 }}
+  labels:
+    {{- include "common.labels.labels" . | nindent 4 }}
+{{- if .Values.server.service.labels }}
+{{ toYaml .Values.server.service.labels | indent 4 }}
+{{- end }}
 spec:
   ports:
-  - name: {{ .Values.deployment.port }}-tcp
-    port: {{ .Values.service.port }}
-    protocol: TCP
-    targetPort: {{ .Values.deployment.port }}
+    {{- tpl (toYaml .Values.server.service.ports) . | nindent 4 }}
   selector:
-    {{- include "tuf.matchLabels" . | nindent 4 }}
+    {{- include "common.labels.selectorLabels" . | nindent 4 }}
   type: ClusterIP

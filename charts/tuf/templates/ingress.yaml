@@ -17,11 +17,7 @@ spec:
         paths:
           - path: {{ .path }}
             pathType: {{ default "Prefix" .pathType }}
-            backend:
-              service:
-                name: {{ $.Values.service.name }}
-                port:
-                  number: {{ $.Values.service.port | int }}
+            backend: {{- include "tuf.server.ingress.backend" $  | nindent 14 }}
     {{- end }}
 {{- if .Values.ingress.tls }}
   tls:

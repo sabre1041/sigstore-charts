@@ -1,12 +1,14 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ .Values.roleBindingName }}
-{{ include "tuf.namespace" . | indent 2 }}
+  name: {{ template "common.names.fullname" . }}
+{{ include "common.names.namespace" . | indent 2 }}
+  labels:
+    {{- include "common.labels.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ .Values.roleName }}
+  name: {{ template "common.names.fullname" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ .Values.serviceAccountName }}
+    name: {{ template "tuf.serviceAccountName" . }}

@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "tsa.fullname" . }}
-{{ include "tsa.namespace" . | indent 2 }}
+  name: {{ template "common.names.fullname" . }}
+{{ include "common.names.namespace" . | indent 2 }}
   labels:
-    {{- include "tsa.labels" . | nindent 4 }}
+    {{- include "common.labels.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.server.replicaCount }}
   selector:
     matchLabels:
-      {{- include "tsa.selectorLabels" . | nindent 6 }}
+      {{- include "common.labels.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -18,17 +18,17 @@ spec:
         {{- toYaml .Values.server.podAnnotations | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "tsa.selectorLabels" . | nindent 8 }}
+        {{- include "common.labels.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ template "tsa.serviceAccountName" . }}
       # This doesn't actually use Kubernetes credentials, so don't mount them in.
       automountServiceAccountToken: {{ .Values.server.serviceAccount.mountToken }}
       containers:
-        - name: {{ template "tsa.fullname" . }}
-          image: "{{ template "tsa.image" .Values.server.image }}"
+        - name: {{ template "common.names.fullname" . }}
+          image: "{{ template "common.images.image" .Values.server.image }}"
           imagePullPolicy: "{{ .Values.server.image.pullPolicy }}"
           ports:
-{{- include "tsa.containerPorts" .Values.server.service.ports | indent 12 }}
+{{- include "common.network.containerPorts" .Values.server.service.ports | indent 12 }}
           args:
             - "serve"
             - "--host=0.0.0.0"

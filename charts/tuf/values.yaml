@@ -1,50 +1,57 @@
 forceNamespace: ""
 imagePullSecrets: []
 serviceAccountName: tuf
-roleName: tuf
-roleBindingName: tuf
-fullnameOverride: tuf
-enabled: true
 
-deployment:
-  name: tuf
+server:
   replicas: 1
-  registry: ghcr.io
-  repository: sigstore/scaffolding/server
-  version: sha256:719ea3fe44c52af5a5fedab2168429872e37e97b9f063977fc164d60a5a14b53
-  imagePullPolicy: IfNotPresent
-  port: 8080
+  image:
+    registry: ghcr.io
+    repository: sigstore/scaffolding/server
+    version: sha256:5741a5da64b17fe5667c9f4ff3003e4d7af0ba6a7c66ff752a6a7546bc05117f
+    pullPolicy: IfNotPresent
+  svcPort: 8080
 
-secrets:
-  rekor:
-    create: false
-    name: rekor-public-key
-    key: key
-    path: rekor-pubkey
-  fulcio:
-    create: false
-    name: fulcio-server-secret
-    key: cert
-    path: fulcio-cert
-  ctlog:
-    create: false
-    name: ctlog-public-key
-    key: public
-    path: ctlog-pubkey
+  serviceAccount:
+    create: true
+    name: ""
+    annotations: {}
 
-ingress:
-  create: true
-  name: tuf-server
-  className: nginx
-  annotations: {}
-  http:
-    hosts:
-    - path: /
-      host: "tuf.localhost"
+  secrets:
+    rekor:
+      create: false
+      name: rekor-public-key
+      key: key
+      path: rekor-pubkey
+    fulcio:
+      create: false
+      name: fulcio-server-secret
+      key: cert
+      path: fulcio-cert
+    ctlog:
+      create: false
+      name: ctlog-public-key
+      key: public
+      path: ctlog-pubkey
 
-service:
-  name: tuf-server
-  port: 80
+  ingress:
+    create: true
+    name: tuf-server
+    className: nginx
+    annotations: {}
+    http:
+      hosts:
+      - path: /
+        host: "tuf.localhost"
+
+  service:
+    type: ClusterIP
+    ports:
+      - name: 80-tcp
+        port: 80
+        protocol: TCP
+        targetPort: 80
+
+
 
 namespace:
   create: false

@@ -61,7 +61,7 @@ spec:
           args:
 {{  include "rekor.server.args" . | indent 12 }}
           ports:
-{{- include "rekor.containerPorts" .Values.server.service.ports | indent 12 }}
+{{- include "common.network.containerPorts" .Values.server.service.ports | indent 12 }}
           volumeMounts:
             - name: {{ template "rekor.sharding-config" . }}
               mountPath: {{ .Values.server.sharding.mountPath }}

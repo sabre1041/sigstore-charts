@@ -8,14 +8,14 @@ metadata:
   labels:
     {{- include "trillian.logSigner.labels" . | nindent 4 }}
   name: {{ template "trillian.logSigner.fullname" . }}
-{{ include "trillian.namespace" . | indent 2 }}
+{{ include "common.names.namespace" . | indent 2 }}
 spec:
   selector:
     {{- if .Values.schedulerName }}
     schedulerName: "{{ .Values.schedulerName }}"
     {{- end }}
     matchLabels:
-      {{- include "trillian.logSigner.matchLabels" . | nindent 6 }}
+      {{- include "trillian.logSigner.selectorLabels" . | nindent 6 }}
   replicas: {{ .Values.logSigner.replicaCount }}
   {{- if .Values.logSigner.strategy }}
   strategy:
@@ -38,7 +38,7 @@ spec:
 {{- if .Values.mysql.enabled }}
       initContainers:
         - name: "wait-for-trillian-db"
-          image: "{{ template "trillian.image" .Values.initContainerImage.netcat }}"
+          image: "{{ template "common.images.image" .Values.initContainerImage.netcat }}"
           imagePullPolicy: {{ .Values.initContainerImage.netcat.imagePullPolicy }}
           command: ["sh", "-c", "until nc -z -w 10 {{ template "mysql.hostname" . }} {{ .Values.mysql.port }}; do echo waiting for {{ template "mysql.hostname" . }}; sleep 5; done;"]
       {{- if .Values.initContainerResources }}
@@ -55,7 +55,7 @@ spec:
       containers:
         {{- if .Values.mysql.gcp.enabled }}
         - name: cloud-sql-proxy
-          image: "{{ template "trillian.image" .Values.mysql.gcp.cloudsql }}"
+          image: "{{ template "common.images.image" .Values.mysql.gcp.cloudsql }}"
           command:
             - "/cloud_sql_proxy"
             - "-instances={{ .Values.mysql.gcp.instance }}=tcp:{{ .Values.mysql.port }}"
@@ -66,15 +66,15 @@ spec:
           resources:
 {{ toYaml .Values.mysql.gcp.cloudsql.resources | indent 12 }}
         {{- end }}
-        - name: {{ template "trillian.name" . }}-{{ .Values.logSigner.name }}
-          image: "{{ template "trillian.image" .Values.logSigner.image }}"
+        - name: {{ template "common.names.name" . }}-{{ .Values.logSigner.name }}
+          image: "{{ template "common.images.image" .Values.logSigner.image }}"
           imagePullPolicy: "{{ .Values.logSigner.image.pullPolicy }}"
           args:
 {{  include "trillian.logSigner.args" . | indent 12 }}
           env:
 {{- include "trillian.storageSystem.envCredentials" . | indent 12}}
           ports:
-{{- include "trillian.containerPorts" .Values.logSigner.service.ports | indent 12 }}
+{{- include "common.network.containerPorts" .Values.logSigner.service.ports | indent 12 }}
 {{- if .Values.logSigner.livenessProbe }}
           livenessProbe:
 {{ toYaml .Values.logSigner.livenessProbe | indent 12 }}

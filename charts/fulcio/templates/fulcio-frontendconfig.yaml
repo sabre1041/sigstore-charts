@@ -3,10 +3,10 @@
 apiVersion: "networking.gke.io/v1beta1"
 kind: FrontendConfig
 metadata:
-  name: {{ template "fulcio.fullname" $ -}}-{{- .name }}
+  name: {{ template "common.names.fullname" $ -}}-{{- .name }}
   labels:
-    {{- include "fulcio.labels" $ | nindent 4 }}
-{{ include "fulcio.namespace" $ | indent 2 }}
+    {{- include "common.labels.labels" $ | nindent 4 }}
+{{ include "common.names.namespace" $ | indent 2 }}
 spec:
 {{ toYaml .frontendConfigSpec | indent 2 }}
 ---

@@ -3,9 +3,9 @@ apiVersion: "networking.k8s.io/v1"
 kind: Ingress
 metadata:
   labels:
-    {{- include "fulcio.labels" . | nindent 4 }}
-  name: {{ template "fulcio.fullname" . }}-grpc
-{{ include "fulcio.namespace" . | indent 2 }}
+    {{- include "common.labels.labels" . | nindent 4 }}
+  name: {{ template "fulcio.grpc" . }}
+{{ include "common.names.namespace  " . | indent 2 }}
   annotations:
 {{ toYaml .Values.server.ingress.grpc.annotations | indent 4 }}
 spec:

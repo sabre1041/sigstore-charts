@@ -3,9 +3,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ template "fulcio.createcerts.fullname" . }}
-{{ include "fulcio.namespace" . | indent 2 }}
+{{ include "common.names.namespace" . | indent 2 }}
   labels:
-    {{- include "fulcio.labels" . | nindent 4 }}
+    {{- include "common.labels.labels" . | nindent 4 }}
 {{- if .Values.createcerts.annotations }}
   annotations:
 {{ toYaml .Values.createcerts.annotations | indent 4 }}
@@ -21,7 +21,7 @@ spec:
       automountServiceAccountToken: {{ .Values.createcerts.serviceAccount.mountToken }}
       containers:
         - name: {{ template "fulcio.createcerts.fullname" . }}
-          image: "{{ template "fulcio.image" .Values.createcerts.image }}"
+          image: "{{ template "common.images.image" .Values.createcerts.image }}"
           imagePullPolicy: "{{ .Values.createcerts.image.pullPolicy }}"
           args: ["--secret={{ .Values.server.secret }}"]
           env:

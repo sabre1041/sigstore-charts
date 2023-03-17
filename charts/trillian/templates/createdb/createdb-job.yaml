@@ -3,7 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ template "trillian.createdb.fullname" . }}
-{{ include "trillian.namespace" . | indent 2 }}
+{{ include "common.names.namespace" . | indent 2 }}
   labels:
     {{- include "trillian.mysql.labels" . | nindent 4 }}
 {{- if .Values.createdb.annotations }}
@@ -16,13 +16,13 @@ spec:
 {{- end }}
   template:
     spec:
-      serviceAccountName: {{ template "trillian.serviceAccountName.logServer" . }}
+      serviceAccountName: {{ template "trillian.serviceAccountName.createdb" . }}
       restartPolicy: Never
       automountServiceAccountToken: {{ .Values.createdb.serviceAccount.mountToken }}
       containers:
         {{- if .Values.mysql.gcp.enabled }}
         - name: cloud-sql-proxy
-          image: "{{ template "trillian.image" .Values.mysql.gcp.scaffoldSQLProxy }}"
+          image: "{{ template "common.images.image" .Values.mysql.gcp.scaffoldSQLProxy }}"
           args: [
             "-instances={{ .Values.mysql.gcp.instance }}=tcp:{{ .Values.mysql.port }}"
           ]
@@ -40,7 +40,7 @@ spec:
 {{ toYaml .Values.mysql.gcp.scaffoldSQLProxy.resources | indent 12 }}
         {{- end }}
         - name: {{ template "trillian.createdb.fullname" . }}
-          image: "{{ template "trillian.image" .Values.createdb.image }}"
+          image: "{{ template "common.images.image" .Values.createdb.image }}"
           imagePullPolicy: "{{ .Values.createdb.image.pullPolicy }}"
           env:
             - name: NAMESPACE

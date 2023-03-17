@@ -3,10 +3,10 @@
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
-  name: {{ template "fulcio.fullname" $ -}}-{{- .name }}
+  name: {{ template "common.names.fullname" $ -}}-{{- .name }}
   labels:
-    {{- include "fulcio.labels" $ | nindent 4 }}
-{{ include "fulcio.namespace" $ | indent 2 }}
+    {{- include "common.labels.labels" $ | nindent 4 }}
+{{ include "common.names.namespace" $ | indent 2 }}
 spec:
 {{ toYaml .backendConfigSpec | indent 2 }}
 ---

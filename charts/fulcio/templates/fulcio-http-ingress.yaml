@@ -3,9 +3,9 @@ apiVersion: "networking.k8s.io/v1"
 kind: Ingress
 metadata:
   labels:
-    {{- include "fulcio.labels" . | nindent 4 }}
-  name: {{ template "fulcio.fullname" . }}-http
-{{ include "fulcio.namespace" . | indent 2 }}
+    {{- include "common.labels.labels" . | nindent 4 }}
+  name: {{ template "common.names.fullname" . }}-http
+{{ include "common.names.namespace" . | indent 2 }}
   annotations:
 {{ toYaml .Values.server.ingress.http.annotations | indent 4 }}
 spec:

@@ -12,7 +12,7 @@ metadata:
 {{ toYaml .Values.mysql.persistence.labels | indent 4 }}
 {{- end }}
   name: {{ template "trillian.mysql.fullname" . }}
-{{ include "trillian.namespace" . | indent 2 }}
+{{ include "common.names.namespace" . | indent 2 }}
 spec:
   accessModes:
   {{- range .Values.mysql.persistence.accessModes }}

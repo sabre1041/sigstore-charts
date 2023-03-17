@@ -5,7 +5,7 @@ description: |
 
 type: application
 
-version: 2.3.8
+version: 2.3.9
 appVersion: 1.4.0
 
 keywords:
@@ -18,6 +18,9 @@ maintainers:
   - name: The Sigstore Authors
 
 dependencies:
+  - name: common
+    version: 0.1.1
+    repository: https://sigstore.github.io/helm-charts
   - name: ctlog
     version: 0.2.43
     repository: https://sigstore.github.io/helm-charts
@@ -29,4 +32,4 @@ annotations:
     - name: fulcio
       image: gcr.io/projectsigstore/fulcio@sha256:2d78059f645ab6e240b8ceba932308fe96fbfe84eeefc8622eedc8d15830f321
     - name: createcerts
-      image: ghcr.io/sigstore/scaffolding/createcerts@sha256:73e7ac35d0e5169bd14a5cb6caed2e7d44277dec3d1de92e08f4d055523089a1
+      image: ghcr.io/sigstore/scaffolding/createcerts@sha256:7f789b612cdf1e9249d35fa469d1a12b6aa908d63fdf2d3ad1b939a484c76b63

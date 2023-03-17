@@ -1,37 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "tuf.deployment.fullname" . }}
-{{ include "tuf.namespace" . | indent 2 }}
-{{- if .Values.deployment.annotations }}
+  name: {{ template "common.names.fullname" . }}
+{{ include "common.names.namespace" . | indent 2 }}
+{{- if .Values.server.deployment.annotations }}
   annotations:
-    {{- toYaml .Values.deployment.annotations | nindent 4 }}
+    {{- toYaml .Values.server.deployment.annotations | nindent 4 }}
 {{- end }}
   labels:
-    {{- include "tuf.metaLabels" . | nindent 4 }}
-    {{- include "tuf.matchLabels" . | nindent 4 }}
-
+    {{- include "common.labels.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ .Values.server.deployment.replicas }}
   selector:
     matchLabels:
-      {{- include "tuf.matchLabels" . | nindent 6 }}
+      {{- include "common.labels.selectorLabels" . | nindent 6 }}
 
 {{- if .Values.deployment.strategy }}
   strategy:
-{{ toYaml .Values.deployment.strategy | trim | indent 4 }}
-    {{ if eq .Values.deployment.strategy.type "Recreate" }}rollingUpdate: null{{ end }}
+{{ toYaml .Values.server.deployment.strategy | trim | indent 4 }}
+    {{ if eq .Values.server.deployment.strategy.type "Recreate" }}rollingUpdate: null{{ end }}
 {{- end }}
   template:
     metadata:
       labels:
-        {{- include "tuf.metaLabels" . | nindent 8 }}
-        {{- include "tuf.matchLabels" . | nindent 8 }}
+        {{- include "common.labels.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ .Values.serviceAccountName }}
+      serviceAccountName: {{ template "tuf.serviceAccountName" . }}
       containers:
-      - image: {{ template "tuf.image" .Values.deployment }}
-        name: {{ .Values.deployment.name }}
+      - image: name: {{ template "common.names.fullname" . }}
+        name: "{{ template "common.images.image" .Values.createtree.image }}"
         ports:
           - containerPort: {{ .Values.deployment.port }}
         env:
@@ -49,20 +46,20 @@ spec:
         projected:
           sources: 
           - secret:
-              name: {{ .Values.secrets.ctlog.name }}
+              name: {{ .Values.server.secrets.ctlog.name }}
               items:
-              - key: {{ .Values.secrets.ctlog.key }}
-                path: {{ .Values.secrets.ctlog.path }}
+              - key: {{ .Values.server.secrets.ctlog.key }}
+                path: {{ .Values.server.secrets.ctlog.path }}
           - secret:
-              name: {{ .Values.secrets.fulcio.name }}
+              name: {{ .Values.server.secrets.fulcio.name }}
               items:
-              - key: {{ .Values.secrets.fulcio.key }}
-                path: {{ .Values.secrets.fulcio.path }}
+              - key: {{ .Values.server.secrets.fulcio.key }}
+                path: {{ .Values.server.secrets.fulcio.path }}
           - secret:
-              name: {{ .Values.secrets.rekor.name }}
+              name: {{ .Values.server.secrets.rekor.name }}
               items:
-              - key: {{ .Values.secrets.rekor.key }}
-                path: {{ .Values.secrets.rekor.path }}
+              - key: {{ .Values.server.secrets.rekor.key }}
+                path: {{ .Values.server.secrets.rekor.path }}
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
