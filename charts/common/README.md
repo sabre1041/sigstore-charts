@@ -22,6 +22,7 @@ A Library Helm Chart containing common logic for use by Sigstore charts
 | Name                  | Description                                                                      |      Expected Input                |
 |-----------------------|----------------------------------------------------------------------------------|------------------------------------|
 | `common.images.image` | Create a fully qualified image reference. see [Image](#image) for the structure. | `.Values.image` Reference to Image |
+| `common.images.imagePullSecrets` | Returns the `imagePullSecrets` field based on a list of pull secrets associated to an image and the global pull secrets  | `dict "pullSecrets" (list "pullSecrets-value") "context" $`
 
 ### Labels
 
