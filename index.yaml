@@ -47,6 +47,33 @@ entries:
   - annotations:
       artifacthub.io/images: |
         - name: ct_server
+          image: ghcr.io/sigstore/scaffolding/ct_server:v0.6.17@sha256:e16f0a2be43a317a4c392cca24eec8c8fef06b0e836bc3545979ac0335fcf6f5
+        - name: createctconfig
+          image: ghcr.io/sigstore/scaffolding/createctconfig:v0.6.17@sha256:a891233c7f54a11025a4cac6119ba4aeea4f643c2012ff30e921aeca8a32d6db
+        - name: createtree
+          image: ghcr.io/sigstore/scaffolding/createtree:v0.6.17@sha256:eb1a94738f34964c7456d18d30b8a45a654af89bb5371f69b2403df373be0826
+        - name: curlimages/curl
+          image: docker.io/curlimages/curl:8.5.0@sha256:4bfa3e2c0164fb103fb9bfd4dc956facce32b6c5d47cc09fcec883ce9535d5ac
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.6.17
+    created: "2024-05-09T19:32:50.292738653Z"
+    description: Certificate Log
+    digest: e7d68be243c3deaa7dd662256368e7b75653b13a52f2127ad3ca68e63bebae6f
+    home: https://sigstore.dev/
+    keywords:
+    - security
+    - pki
+    maintainers:
+    - name: The Sigstore Authors
+    name: ctlog
+    type: application
+    urls:
+    - https://github.com/sabre1041/sigstore-charts/releases/download/ctlog-0.2.52/ctlog-0.2.52.tgz
+    version: 0.2.52
+  - annotations:
+      artifacthub.io/images: |
+        - name: ct_server
           image: ghcr.io/sigstore/scaffolding/ct_server:v0.6.10@sha256:ef9ed3f5b9dd4f886c658505bff63c020063f96cd4634a5ddae2e66dad1c3264
         - name: createctconfig
           image: ghcr.io/sigstore/scaffolding/createctconfig:v0.6.10@sha256:bc093cafb95a87461ac3215d7ce3ef7d0a1fa2d0db17e119415061f781d7848d
@@ -99,6 +126,35 @@ entries:
     - https://github.com/sabre1041/sigstore-charts/releases/download/ctlog-0.2.39/ctlog-0.2.39.tgz
     version: 0.2.39
   fulcio:
+  - annotations:
+      artifacthub.io/images: |
+        - name: fulcio
+          image: gcr.io/projectsigstore/fulcio:v1.4.5@sha256:003d38b43442d436fe645feaebf8784975c138e411cf232276bea9de2a9f7b58
+        - name: createcerts
+          image: ghcr.io/sigstore/scaffolding/createcerts:v0.6.17@sha256:2aaea38198d25ee53fb1f6da79eaa75c24bcc4ef81792a68687ba2ae0dc8ccf6
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.4.5
+    created: "2024-05-09T19:32:50.432248629Z"
+    dependencies:
+    - condition: ctlog.enabled
+      name: ctlog
+      repository: https://sigstore.github.io/helm-charts
+      version: 0.2.52
+    description: 'Fulcio is a free code signing Certificate Authority, built to make
+      short-lived certificates available to anyone. '
+    digest: acf1552ecba995585aebf5128bd6f13bb2917adda5744171070c6f045d6beed1
+    home: https://sigstore.dev/
+    keywords:
+    - security
+    - pki
+    maintainers:
+    - name: The Sigstore Authors
+    name: fulcio
+    type: application
+    urls:
+    - https://github.com/sabre1041/sigstore-charts/releases/download/fulcio-2.3.19/fulcio-2.3.19.tgz
+    version: 2.3.19
   - annotations:
       artifacthub.io/images: |
         - name: fulcio
@@ -165,6 +221,27 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 0.8.2
+    created: "2024-05-09T19:32:50.5401224Z"
+    description: The Helm chart for Policy  Controller
+    digest: 0d3fc71980ab7f63a269aa006a3d93f181a3ba7506d33af880af52d9aca5cda2
+    home: https://github.com/sigstore/policy-controller
+    maintainers:
+    - name: dlorenc
+    - name: hectorj2f
+    name: policy-controller
+    sources:
+    - https://github.com/sigstore/policy-controller
+    type: application
+    urls:
+    - https://github.com/sabre1041/sigstore-charts/releases/download/policy-controller-0.6.8/policy-controller-0.6.8.tgz
+    version: 0.6.8
+  - annotations:
+      artifacthub.io/images: |
+        - name: policy-controller
+          image: ghcr.io/sigstore/policy-controller/policy-controller:v0.8.2@sha256:f291fce5b9c1a69ba54990eda7e0fe4114043b1afefb0f4ee3e6f84ec9ef1605
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.8.2
     created: "2023-11-30T03:00:34.114406363Z"
     description: The Helm chart for Policy  Controller
     digest: 4da49815aa6e7e0b1eabd5419455daf31c66059b0e34892cd3c9e5da3eb0bf1c
@@ -203,6 +280,44 @@ entries:
     - https://github.com/sabre1041/sigstore-charts/releases/download/policy-controller-0.3.8/policy-controller-0.3.8.tgz
     version: 0.3.8
   rekor:
+  - annotations:
+      artifacthub.io/images: |
+        - name: createtree
+          image: ghcr.io/sigstore/scaffolding/createtree:v0.6.17@sha256:eb1a94738f34964c7456d18d30b8a45a654af89bb5371f69b2403df373be0826
+        - name: curlimages/curl
+          image: docker.io/curlimages/curl:8.5.0@sha256:4bfa3e2c0164fb103fb9bfd4dc956facce32b6c5d47cc09fcec883ce9535d5ac
+        - name: rekor-server
+          image: gcr.io/projectsigstore/rekor-server:v1.3.6@sha256:1237f29e2105d7f5451bbe15a3aca8677ddd1bb80620ca2fd06f74262437cf51
+        - name: redis
+          image: docker.io/redis:6.2.14-alpine3.19@sha256:c5a607fb6e1bb15d32bbcf14db22787d19e428d59e31a5da67511b49bb0f1ccc
+        - name: backfill-redis
+          image: ghcr.io/sigstore/rekor/backfill-redis:v1.3.6@sha256:a13cd8b2a554d6116888fd1f383cf6e91fc1716df5eda392b82e6bfc66995ec3
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.3.6
+    created: "2024-05-09T19:32:50.650234456Z"
+    dependencies:
+    - condition: trillian.enabled
+      name: trillian
+      repository: https://sigstore.github.io/helm-charts
+      version: 0.2.22
+    description: Part of the sigstore project, Rekor is a timestamping server and
+      transparency log for storing signatures, as well as an API based server for
+      validation
+    digest: b39dbbf7dcdbf2e205abbd0af9ee86276c8c3eba52113d828eb22261bb028833
+    home: https://sigstore.dev/
+    keywords:
+    - security
+    - transparency logs
+    maintainers:
+    - name: The Sigstore Authors
+    name: rekor
+    sources:
+    - https://github.com/sigstore/rekor
+    type: application
+    urls:
+    - https://github.com/sabre1041/sigstore-charts/releases/download/rekor-1.3.21/rekor-1.3.21.tgz
+    version: 1.3.21
   - annotations:
       artifacthub.io/images: |
         - name: createtree
@@ -482,6 +597,48 @@ entries:
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    created: "2024-05-09T19:32:50.772177595Z"
+    dependencies:
+    - condition: fulcio.enabled
+      name: fulcio
+      repository: https://sigstore.github.io/helm-charts
+      version: 2.3.19
+    - condition: rekor.enabled
+      name: rekor
+      repository: https://sigstore.github.io/helm-charts
+      version: 1.3.21
+    - condition: trillian.enabled
+      name: trillian
+      repository: https://sigstore.github.io/helm-charts
+      version: 0.2.22
+    - condition: ctlog.enabled
+      name: ctlog
+      repository: https://sigstore.github.io/helm-charts
+      version: 0.2.52
+    - condition: tuf.enabled
+      name: tuf
+      repository: https://sigstore.github.io/helm-charts
+      version: 0.1.12
+    - condition: tsa.enabled
+      name: tsa
+      repository: https://sigstore.github.io/helm-charts
+      version: 1.0.2
+    description: Scaffolding the components of the sigstore architecture
+    digest: 72b9b7e988ca0bbbaac786e865e78392e6f0642b1b9c8a3b132716b9f27435c8
+    home: https://sigstore.dev/
+    keywords:
+    - security
+    - pki
+    maintainers:
+    - name: The Sigstore Authors
+    name: scaffold
+    type: application
+    urls:
+    - https://github.com/sabre1041/sigstore-charts/releases/download/scaffold-0.6.49/scaffold-0.6.49.tgz
+    version: 0.6.49
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     created: "2023-11-30T03:00:34.380299231Z"
     dependencies:
     - condition: fulcio.enabled
@@ -563,6 +720,27 @@ entries:
   - annotations:
       artifacthub.io/images: |
         - name: sigstore-prober
+          image: ghcr.io/sigstore/scaffolding/prober:v0.6.17@sha256:b6f9b7d9debcdf9b586625dd776f082260dc263e9e104cd810470e7420b6c5e7
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.6.17
+    created: "2024-05-09T19:32:50.915928748Z"
+    description: Sigstore API Endpoint Prober
+    digest: 5a88cd43500a48255ff26b5cc928ded4f0bcf19f8890a97fa20b268a840d22fa
+    home: https://sigstore.dev/
+    keywords:
+    - security
+    - prober
+    maintainers:
+    - name: The Sigstore Authors
+    name: sigstore-prober
+    type: application
+    urls:
+    - https://github.com/sabre1041/sigstore-charts/releases/download/sigstore-prober-0.0.22/sigstore-prober-0.0.22.tgz
+    version: 0.0.22
+  - annotations:
+      artifacthub.io/images: |
+        - name: sigstore-prober
           image: ghcr.io/sigstore/scaffolding/prober:v0.6.10@sha256:b268bf68afd74bc899cb8867985f401347cb504a737df367ee7ee53f6b76b792
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
@@ -603,6 +781,46 @@ entries:
     - https://github.com/sabre1041/sigstore-charts/releases/download/sigstore-prober-0.0.10/sigstore-prober-0.0.10.tgz
     version: 0.0.10
   trillian:
+  - annotations:
+      artifacthub.io/images: |
+        - name: curl
+          image: docker.io/curlimages/curl:8.5.0@sha256:4bfa3e2c0164fb103fb9bfd4dc956facce32b6c5d47cc09fcec883ce9535d5ac
+        - name: netcat
+          image: cgr.dev/chainguard/netcat@sha256:7243b469d34bd28969fa2c764a12d91084c427209540bb68645629d635b3f143
+        - name: db_server
+          image: gcr.io/trillian-opensource-ci/db_server:v1.5.3@sha256:2a685a38dd0129cceb646c232d285383f614c7e6fa51ff8f512aef78e4298461
+        - name: log_server
+          image: ghcr.io/sigstore/scaffolding/trillian_log_server:v0.6.17@sha256:34a87140ff88da3f8b83ef8f12575a5dc684afc79af880f148f45ca27f16e60e
+        - name: log_signer
+          image: ghcr.io/sigstore/scaffolding/trillian_log_signer:v0.6.17@sha256:ab97f7591e96e7ae1dbfea3bcc4b5f4b8ad13857e04779d8c6c2309cc432e5ce
+        - name: cloud_proxy
+          image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.9.0-alpine@sha256:40a7b65ad15ce73666ddf8f79a7651b59477688c27e22fd47aa59bb9b39757d9
+        - name: scaffold_cloud_proxy
+          image: ghcr.io/sigstore/scaffolding/cloudsqlproxy:v0.6.17@sha256:7cf71a5173283a5102e4765a829205007dd171511d6f8715f45b7179411ea2e2
+        - name: createdb
+          image: ghcr.io/sigstore/scaffolding/createdb:v0.6.17@sha256:ea809b5f603764df5fb7e1f46f7e7be24b6717890c560e7e67fdb0a640a8a755
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.6.0
+    created: "2024-05-09T19:32:51.032421208Z"
+    description: 'Trillian is a log that stores an accurate, immutable and verifiable
+      history of activity. '
+    digest: ecac929650bddfb7a09338f8e29e6b2bb4f7f6d3bb566d28740f60aecf7d7d6d
+    home: https://sigstore.dev/
+    keywords:
+    - security
+    - pki
+    maintainers:
+    - name: The Sigstore Authors
+      url: https://sigstore.dev/
+    name: trillian
+    sources:
+    - https://github.com/google/trillian
+    - https://github.com/sigstore/helm-charts/tree/main/charts/trillian
+    type: application
+    urls:
+    - https://github.com/sabre1041/sigstore-charts/releases/download/trillian-0.2.22/trillian-0.2.22.tgz
+    version: 0.2.22
   - annotations:
       artifacthub.io/images: |
         - name: curl
@@ -684,6 +902,28 @@ entries:
   - annotations:
       artifacthub.io/images: |
         - name: tsa
+          # crane digest ghcr.io/sigstore/timestamp-server:v1.2.1
+          image: ghcr.io/sigstore/timestamp-server@sha256:f4dcc96092a1b1fb5ca36d776f92a7cc62cdb1a8866c5120340f919141a3cd58
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.2.1
+    created: "2024-05-09T19:32:51.254385247Z"
+    description: 'Timestamp Authority issuing RFC3161 signed timestamps. '
+    digest: d20e9c6c486cfc7d98b0e2cc0c17593ad4cb41de1952531bbbdc6a2045ca1c9b
+    home: https://sigstore.dev/
+    keywords:
+    - security
+    - timestamp
+    maintainers:
+    - name: The Sigstore Authors
+    name: tsa
+    type: application
+    urls:
+    - https://github.com/sabre1041/sigstore-charts/releases/download/tsa-1.0.2/tsa-1.0.2.tgz
+    version: 1.0.2
+  - annotations:
+      artifacthub.io/images: |
+        - name: tsa
           # crane digest ghcr.io/sigstore/timestamp-server:v1.2.0
           image: ghcr.io/sigstore/timestamp-server@sha256:727e868e9ba9b181029d8e7d52f7153af53d9b0678c463e86c30985aae5cb2b5
       artifacthub.io/license: Apache-2.0
@@ -704,6 +944,28 @@ entries:
     - https://github.com/sabre1041/sigstore-charts/releases/download/tsa-1.0.1/tsa-1.0.1.tgz
     version: 1.0.1
   tuf:
+  - annotations:
+      artifacthub.io/images: |
+        - name: scaffolding-tuf
+          image: ghcr.io/sigstore/scaffolding/server:v0.6.17@sha256:496b443c82be2c4a14a6e3dfbfa9ccae5b6eaedd7a3aca58b84ddae9492d9906
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.6.17
+    created: "2024-05-09T19:32:51.352361116Z"
+    description: A framework for securing software update systems - the scaffolding
+      implementation
+    digest: ed4593a7b711a385c33393f026387553535c8e7f169a3fcd398201253306c1d5
+    home: https://sigstore.dev/
+    maintainers:
+    - name: The Sigstore Authors
+      url: https://sigstore.dev/
+    name: tuf
+    sources:
+    - https://github.com/sigstore/scaffolding
+    type: application
+    urls:
+    - https://github.com/sabre1041/sigstore-charts/releases/download/tuf-0.1.12/tuf-0.1.12.tgz
+    version: 0.1.12
   - annotations:
       artifacthub.io/images: |
         - name: scaffolding-tuf
@@ -754,6 +1016,28 @@ entries:
   - annotations:
       artifacthub.io/images: |
         - name: updatetree
+          image: ghcr.io/sigstore/scaffolding/updatetree:v0.6.17@sha256:9fe03dde7324490cc7a84c75dfa3f1de267fc71c1a473fc67491c690e22c32ab
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.6.17
+    created: "2024-05-09T19:32:51.45524777Z"
+    description: Update the status of an existing Trillian tree
+    digest: e484616afb27b7012eeacb8351d024909c939747a34bdbea56e9fffb50c19af8
+    home: https://sigstore.dev/
+    keywords:
+    - security
+    - trillian
+    - updatetree
+    maintainers:
+    - name: The Sigstore Authors
+    name: updatetree
+    type: application
+    urls:
+    - https://github.com/sabre1041/sigstore-charts/releases/download/updatetree-0.0.9/updatetree-0.0.9.tgz
+    version: 0.0.9
+  - annotations:
+      artifacthub.io/images: |
+        - name: updatetree
           image: ghcr.io/sigstore/scaffolding/updatetree:v0.6.10@sha256:e66fc875d401e8d971e2ab5db06134bed57de7e568fa00e6fcea3b775972ee65
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
@@ -795,4 +1079,4 @@ entries:
     urls:
     - https://github.com/sabre1041/sigstore-charts/releases/download/updatetree-0.0.4/updatetree-0.0.4.tgz
     version: 0.0.4
-generated: "2023-11-30T03:00:35.053169186Z"
+generated: "2024-05-09T19:32:51.455399934Z"
